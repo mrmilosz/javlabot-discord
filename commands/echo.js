@@ -1,5 +1,7 @@
 module.exports = {
     run: (message, argument) => {
-        message.channel.send(argument);
+        if (argument) {
+            message.channel.send(argument);
+        }
     }
 };
