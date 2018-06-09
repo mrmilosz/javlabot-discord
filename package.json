@@ -5,6 +5,10 @@
     "main": "main.js",
     "author": "Milosz Kosmider",
     "license": "BSD-3-Clause",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mrmilosz/javlabot-discord.git"
+    },
     "dependencies": {
         "discord.js": "^11.3.2",
         "winston": "^2.4.2"
