@@ -20,7 +20,7 @@ client.on('message', message => {
                 logger.info(`Unimplemented command: ${command}`);
                 message.channel.send(`The ${command} command is not implemented! Perhaps that moron, <@${config.authorDiscordId}>, didn't implement it...`);
             } else {
-                throw e;
+                logger.info(`Had an oopsie: ${caught}`);
             }
         }
     }
