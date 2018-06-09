@@ -10,8 +10,9 @@ client.on('ready', () => {
 
 client.on('message', message => {
     logger.info(`Got message from ${message.author.username}: ${message.content}`);
-    if (!message.author.bot && /^!!\w+/.test(message.content)) {
-        const [command, argument] = message.content.match(/^!!(\w+)(?:\s(.*))?$/).slice(1);
+    const match = message.content.match(/^!!(\w+)(?:\s(.*))?$/);
+    if (!message.author.bot && match) {
+        const [command, argument] = match.slice(1);
         try {
             require(`./commands/${command}`).run(message, argument);
         } catch (caught) {
