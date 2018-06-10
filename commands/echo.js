@@ -1,5 +1,8 @@
+const locked = require('./decorators/locked');
+
 module.exports = {
-    run: (message, argument) => {
+    @locked
+    run(message, argument) {
         if (argument !== '') {
             message.channel.send(argument);
         }

@@ -1,6 +1,7 @@
 const config = require('./config.json');
 const discord = require('discord.js');
 const logger = require('./logger').get(module);
+const state = require('./state');
 
 const client = new discord.Client();
 
@@ -18,8 +19,13 @@ client.on('message', message => {
                 try {
                     require(`./commands/${commandName}`).run(message, argument);
                 } catch (caught) {
-                    if (caught instanceof Error && caught.code === 'MODULE_NOT_FOUND') {
-                        logger.debug(`Module not found: ${commandName}; Reason: ${caught}`);
+                    if (caught instanceof Error) {
+                        if (caught.code === 'MODULE_NOT_FOUND') {
+                            logger.debug(`Module not found: ${commandName}; Reason: ${caught}`);
+                        }
+                        else {
+                            logger.warn(`Could not run command ${commandName}: ${caught.stack}`);
+                        }
                     }
                     else {
                         logger.warn(`Could not run command ${commandName}: ${caught}`);
@@ -64,7 +70,9 @@ function isValid(commandName) {
 }
 
 function handleUnimplementedCommand(channel, commandName) {
-    channel.send(`The ${commandName} command is not implemented! ` +
-        `Perhaps that moron, <@${config.authorDiscordId}>, didn't implement it...`);
+    if (state.haveLock) {
+        channel.send(`The ${commandName} command is not implemented! ` +
+            `Perhaps that moron, <@${config.authorDiscordId}>, didn't implement it...`);
+    }
 }
 
