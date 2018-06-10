@@ -1,10 +1,6 @@
 const path = require('path');
 const winston = require('winston');
 
-function getLabel(callingModule) {
-    return path.relative(path.dirname(module.filename), callingModule.filename);
-};
-
 module.exports = {
     get(callingModule) {
         return new(winston.Logger)({
@@ -19,3 +15,8 @@ module.exports = {
         });
     }
 };
+
+function getLabel(callingModule) {
+    return path.relative(path.dirname(module.filename), callingModule.filename);
+};
+
