@@ -11,9 +11,9 @@ client.on('ready', () => {
 client.on('message', message => {
     logger.info(`Got message from ${message.author.username}: ${message.content}`);
 
-    if (isCommandString(message.content)) {
+    if (!message.author.bot && isCommandString(message.content)) {
         const [commandName, argument] = parseCommandString(message.content);
-        if (!message.author.bot && commandName !== '') {
+        if (commandName !== '') {
             if (isValid(commandName)) {
                 try {
                     require(`./commands/${commandName}`).run(message, argument);

@@ -9,7 +9,7 @@ module.exports = {
             const soundPath = path.join('sounds', argument);
             fs.exists(soundPath, exists => {
                 if (exists) {
-                    if (message.member.voiceChannel) {
+                    if (message.member.voiceChannel !== undefined) {
                         message.member.voiceChannel.join().then(connection => {
                             const dispatcher = connection.playFile(soundPath);
                             dispatcher.on('end', reason => {
