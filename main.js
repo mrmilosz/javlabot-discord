@@ -18,11 +18,18 @@ client.on('message', message => {
             if (isValid(commandName)) {
                 try {
                     require(`./commands/${commandName}`).run(message, argument);
-                } catch (_) {
+                } catch (caught) {
+                    if (caught instanceof Error && caught.code === 'MODULE_NOT_FOUND') {
+                        logger.debug(`Module not found: ${commandName}; Reason: ${caught}`);
+                    }
+                    else {
+                        logger.warn(`Could not run command ${commandName}: ${caught}`);
+                    }
                     handleUnimplementedCommand(message.channel, commandName);
                 }
             }
             else {
+                logger.debug(`Invalid comand: ${commandName}`);
                 handleUnimplementedCommand(message.channel, commandName);
             }
         }
@@ -45,7 +52,7 @@ function parseCommand(relevantMessageContent) {
     if (index === -1) {
         return [relevantMessageContent, ''];
     }
-    return [relevantMessageContent.slice(0, index), relevantMessageContent.slice(index)];
+    return [relevantMessageContent.slice(0, index), relevantMessageContent.slice(index + 1)];
 }
 
 function isValid(commandName) {
@@ -53,7 +60,6 @@ function isValid(commandName) {
 }
 
 function handleUnimplementedCommand(channel, commandName) {
-    logger.info(`Unimplemented command: ${commandName}`);
     channel.send(`The ${commandName} command is not implemented! ` +
         `Perhaps that moron, <@${config.authorDiscordId}>, didn't implement it...`);
 }
