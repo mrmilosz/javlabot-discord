@@ -45,7 +45,7 @@ module.exports = {
             } catch (caught) {
                 if (caught instanceof Error) {
                     if (caught.code === 'MODULE_NOT_FOUND') {
-                        logger.debug(`Module not found: ${commandName}; Reason: ${caught.stack}`);
+                        logger.debug(`Could not find module ${commandName}: ${caught.stack}`);
                     } else {
                         logger.warn(`Could not run command ${commandName}: ${caught.stack}`);
                     }
