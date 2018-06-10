@@ -6,7 +6,7 @@ function getLabel(callingModule) {
 };
 
 module.exports = {
-    get: callingModule => {
+    get(callingModule) {
         return new(winston.Logger)({
             transports: [
                 new(winston.transports.Console)({

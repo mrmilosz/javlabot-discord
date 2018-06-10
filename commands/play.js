@@ -22,8 +22,7 @@ module.exports = {
                             message.member.voiceChannel.leave();
                             handleInvalidFile(message.channel, argument);
                         });
-                    }
-                    else {
+                    } else {
                         message.reply('you must be in a voice channel to use this command!');
                     }
                 } else {
