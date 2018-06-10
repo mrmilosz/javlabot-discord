@@ -11,9 +11,8 @@ client.on('ready', () => {
 client.on('message', message => {
     logger.info(`Got message from ${message.author.username}: ${message.content}`);
 
-    const commandCue = '!!';
-    if (message.content.startsWith(commandCue)) {
-        const [commandName, argument] = parseCommand(message.content.substring(commandCue.length));
+    if (isCommandString(message.content)) {
+        const [commandName, argument] = parseCommandString(message.content);
         if (!message.author.bot && commandName !== '') {
             if (isValid(commandName)) {
                 try {
@@ -47,12 +46,17 @@ process.on('SIGTERM', () => {
     process.exit(0);
 });
 
-function parseCommand(relevantMessageContent) {
-    const index = relevantMessageContent.search(/\s/);
+function isCommandString(messageContent) {
+    return /^!![^!]/.test(messageContent);
+}
+
+function parseCommandString(commandString) {
+    const commandStringWithoutMarker = commandString.slice(2);
+    const index = commandStringWithoutMarker.search(/\s/);
     if (index === -1) {
-        return [relevantMessageContent, ''];
+        return [commandStringWithoutMarker, ''];
     }
-    return [relevantMessageContent.slice(0, index), relevantMessageContent.slice(index + 1)];
+    return [commandStringWithoutMarker.slice(0, index), commandStringWithoutMarker.slice(index + 1)];
 }
 
 function isValid(commandName) {
