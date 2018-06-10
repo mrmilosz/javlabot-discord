@@ -7,10 +7,10 @@ module.exports = {
     @authenticated(authorId => authorId === config.authorDiscordId)
     run(message, argument) {
         if (argument === config.lockId) {
-            logger.info('Acquiring lock');
+            message.channel.send(`Lock acquired: ${config.lockId}`);
             state.haveLock = true;
         } else {
-            logger.info('Releasing lock');
+            message.channel.send(`Lock released: ${config.lockId}`);
             state.haveLock = false;
         }
     }
