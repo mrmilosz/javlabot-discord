@@ -10,17 +10,20 @@ client.on('ready', () => {
 
 client.on('message', message => {
     logger.info(`Got message from ${message.author.username}: ${message.content}`);
-    const match = message.content.match(/^!!(\w+)(?:\s(.*))?$/);
-    if (!message.author.bot && match) {
-        const [command, argument] = match.slice(1);
-        try {
-            require(`./commands/${command}`).run(message, argument);
-        } catch (caught) {
-            if (caught instanceof Error && caught.code === 'MODULE_NOT_FOUND') {
-                logger.info(`Unimplemented command: ${command}`);
-                message.channel.send(`The ${command} command is not implemented! Perhaps that moron, <@${config.authorDiscordId}>, didn't implement it...`);
-            } else {
-                logger.info(`Had an oopsie: ${caught}`);
+
+    const commandCue = '!!';
+    if (message.content.startsWith(commandCue)) {
+        const [commandName, argument] = parseCommand(message.content.substring(commandCue.length));
+        if (!message.author.bot && commandName !== '') {
+            if (isValid(commandName)) {
+                try {
+                    require(`./commands/${commandName}`).run(message, argument);
+                } catch (_) {
+                    handleUnimplementedCommand(message.channel, commandName);
+                }
+            }
+            else {
+                handleUnimplementedCommand(message.channel, commandName);
             }
         }
     }
@@ -36,3 +39,22 @@ process.on('SIGTERM', () => {
     client.destroy();
     process.exit(0);
 });
+
+function parseCommand(relevantMessageContent) {
+    const index = relevantMessageContent.search(/\s/);
+    if (index === -1) {
+        return [relevantMessageContent, ''];
+    }
+    return [relevantMessageContent.slice(0, index), relevantMessageContent.slice(index)];
+}
+
+function isValid(commandName) {
+    return !commandName.includes('/');
+}
+
+function handleUnimplementedCommand(channel, commandName) {
+    logger.info(`Unimplemented command: ${commandName}`);
+    channel.send(`The ${commandName} command is not implemented! ` +
+        `Perhaps that moron, <@${config.authorDiscordId}>, didn't implement it...`);
+}
+
