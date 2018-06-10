@@ -1,10 +1,25 @@
-const config = require('../config.json');
+const CONFIG_FILE_NAME = 'config.json';
+
+const config = (() => {
+    try {
+        return require(`../${CONFIG_FILE_NAME}`);
+    } catch (caught) {
+        const fs = require('fs');
+        fs.writeFileSync(CONFIG_FILE_NAME, fs.readFileSync(`template/${CONFIG_FILE_NAME}`));
+        return require(`../${CONFIG_FILE_NAME}`);
+    }
+})();
 const discord = require('discord.js');
 const logger = require('./logger').get(module);
 const state = require('./state');
 
 module.exports = {
     run() {
+        if (config.botNotConfigured) {
+            logger.warn(`Your bot is not configured. Please edit ${CONFIG_FILE_NAME}.`);
+            return;
+        }
+
         const client = new discord.Client();
 
         client.on('ready', () => {
