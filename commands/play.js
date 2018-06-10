@@ -9,16 +9,21 @@ module.exports = {
             const soundPath = path.join('sounds', argument);
             fs.exists(soundPath, exists => {
                 if (exists) {
-                    message.member.voiceChannel.join().then(connection => {
-                        const dispatcher = connection.playFile(soundPath);
-                        dispatcher.on('end', reason => {
+                    if (message.member.voiceChannel) {
+                        message.member.voiceChannel.join().then(connection => {
+                            const dispatcher = connection.playFile(soundPath);
+                            dispatcher.on('end', reason => {
+                                message.member.voiceChannel.leave();
+                            });
+                        }).catch(caught => {
+                            logger.warn(`Could not play sound: ${caught}`);
                             message.member.voiceChannel.leave();
+                            handleInvalidFile(message.channel, argument);
                         });
-                    }).catch(caught => {
-                        logger.warn(`Could not play sound: ${caught}`);
-                        message.member.voiceChannel.leave();
-                        handleInvalidFile(message.channel, argument);
-                    });
+                    }
+                    else {
+                        message.reply('you must be in a voice channel to use this command!');
+                    }
                 } else {
                     logger.info(`No such file: ${soundPath}`);
                     handleInvalidFile(message.channel, argument);
