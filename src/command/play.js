@@ -2,10 +2,12 @@ const config = require('../../config');
 const fs = require('fs');
 const locked = require('./decorator/locked');
 const logger = require('../logger').get(module);
+const notbot = require('./decorator/notbot');
 const path = require('path');
 
 module.exports = {
     @locked
+    @notbot
     run(message, argument) {
         if (!argument.includes('/')) {
             const soundPath = path.join('sound', argument);
