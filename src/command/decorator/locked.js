@@ -1,4 +1,4 @@
-const state = require('../../state.js');
+const state = require('../../state');
 
 module.exports = (target, key, descriptor) => {
     const originalFunction = descriptor.value;
