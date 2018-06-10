@@ -1,6 +1,6 @@
-const config = require('../config.json');
+const config = require('../../config');
 const fs = require('fs');
-const locked = require('./decorators/locked');
+const locked = require('./decorator/locked');
 const logger = require('../logger').get(module);
 const path = require('path');
 
@@ -8,7 +8,7 @@ module.exports = {
     @locked
     run(message, argument) {
         if (!argument.includes('/')) {
-            const soundPath = path.join('sounds', argument);
+            const soundPath = path.join('sound', argument);
             fs.exists(soundPath, exists => {
                 if (exists) {
                     if (message.member.voiceChannel !== undefined) {

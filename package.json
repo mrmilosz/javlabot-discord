@@ -30,7 +30,7 @@
         ]
     },
     "scripts": {
-        "server": "nodemon --exec babel-node main.js",
-        "start": "babel-node main.js"
+        "server": "nodemon --exec babel-node index.js",
+        "start": "babel-node index.js"
     }
 }

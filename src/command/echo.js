@@ -1,4 +1,4 @@
-const locked = require('./decorators/locked');
+const locked = require('./decorator/locked');
 
 module.exports = {
     @locked

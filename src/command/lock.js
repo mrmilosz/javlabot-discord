@@ -1,5 +1,5 @@
-const authenticated = require('./decorators/authenticated');
-const config = require('../config.json');
+const authenticated = require('./decorator/authenticated');
+const config = require('../../config');
 const logger = require('../logger').get(module);
 const state = require('../state');
 
