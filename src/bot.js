@@ -36,7 +36,7 @@ module.exports = {
             const [commandName, argument] = parseCommandString(message.content);
 
             if (!isValidCommandName(commandName)) {
-                logger.debug(`Invalid comand: ${commandName}`);
+                logger.info(`Invalid comand: ${commandName}`);
                 handleUnimplementedCommand(message.channel, commandName);
             }
 
@@ -45,7 +45,7 @@ module.exports = {
             } catch (caught) {
                 if (caught instanceof Error) {
                     if (caught.code === 'MODULE_NOT_FOUND') {
-                        logger.debug(`Could not find module ${commandName}: ${caught.stack}`);
+                        logger.info(`Could not find module ${commandName}: ${caught.stack}`);
                     } else {
                         logger.warn(`Could not run command ${commandName}: ${caught.stack}`);
                     }
