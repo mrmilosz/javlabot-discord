@@ -3,6 +3,7 @@
     "authToken": "make an application and a bot on https://discordapp.com/developers/applications/me and get the client ID from there",
     "authorDiscordId": "put your discord ID (setings -> appearance -> developer mode, then right click your name in a chat and Copy ID) here",
     "avatarUrl": "put the URL of your bot's avatar image here",
+    "helpString": "put something helpful here so people know how to use your bot",
     "lockId": "if you plan to run only one instance of your bot you can remove this, otherwise put \"dev\" or \"prod\" or something",
     "botNotConfigured": "remove this when your bot is configured"
 }
