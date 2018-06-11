@@ -8,6 +8,7 @@ const NoVoiceChannelError = require('../error/NoVoiceChannelError');
 const path = require('path');
 const player = require('../audio/player');
 const SpamError = require('../error/SpamError');
+const StoppingError = require('../error/StoppingError');
 
 module.exports = {
     @locked
@@ -41,6 +42,8 @@ module.exports = {
                 message.channel.send('Too many sounds! Wait until there are fewer in the pipeline.');
             } else if (caught instanceof FileNotFoundError) {
                 handleInvalidFile(message.channel, argument);
+            } else if (caught instanceof StoppingError) {
+                message.channel.send('Currently stopping. Wait a moment.');
             } else if (caught instanceof Error) {
                 logger.warn(`Could not play sound: ${caught.stack}`);
             } else {

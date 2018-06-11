@@ -41,18 +41,11 @@ module.exports = {
             }
 
             try {
-                require(`./command/${commandName}`).run(message, argument);
+                Promise.all([require(`./command/${commandName}`).run(message, argument)]).catch(caught => {
+                    handleCommandCaught(message, commandName, caught);
+                });
             } catch (caught) {
-                if (caught instanceof Error) {
-                    if (caught.code === 'MODULE_NOT_FOUND') {
-                        logger.info(`Could not find module ${commandName}: ${caught.stack}`);
-                    } else {
-                        logger.warn(`Could not run command ${commandName}: ${caught.stack}`);
-                    }
-                } else {
-                    logger.warn(`Could not run command ${commandName}: ${caught}`);
-                }
-                handleUnimplementedCommand(message.channel, commandName);
+                handleCommandCaught(message, commandName, caught);
             }
         });
 
@@ -84,6 +77,19 @@ function parseCommandString(commandString) {
 
 function isValidCommandName(commandName) {
     return !commandName.includes('/');
+}
+
+function handleCommandCaught(message, commandName, caught) {
+    if (caught instanceof Error) {
+        if (caught.code === 'MODULE_NOT_FOUND') {
+            logger.info(`Could not find module ${commandName}: ${caught.stack}`);
+        } else {
+            logger.warn(`Could not run command ${commandName}: ${caught.stack}`);
+        }
+    } else {
+        logger.warn(`Could not run command ${commandName}: ${caught}`);
+    }
+    handleUnimplementedCommand(message.channel, commandName);
 }
 
 function handleUnimplementedCommand(channel, commandName) {
