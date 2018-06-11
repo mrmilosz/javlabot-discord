@@ -1,4 +1,5 @@
 {
+    "activityName": "replace with the activity you want the bot to claim to be doing",
     "authToken": "make an application and a bot on https://discordapp.com/developers/applications/me and get the client ID from there",
     "authorDiscordId": "put your discord ID (setings -> appearance -> developer mode, then right click your name in a chat and Copy ID) here",
     "avatarUrl": "put the URL of your bot's avatar image here",

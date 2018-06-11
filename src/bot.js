@@ -24,6 +24,7 @@ module.exports = {
 
         client.on('ready', () => {
             logger.info(`Logged in as ${client.user.tag}`);
+            client.user.setActivity(config.activityName);
         });
 
         client.on('message', message => {
