@@ -34,34 +34,42 @@ module.exports = {
 
         ++currentSoundCount;
 
-        readyToPlay = readyToPlay.then(() => new Promise(resolve => {
+        readyToPlay = readyToPlay.finally(() => new Promise((resolve, reject) => {
             fs.exists(soundPath, fileExists => {
-                if (!fileExists) {
-                    logger.info(`No such file: ${soundPath}`);
-                    handleInvalidFile(message.channel, argument);
+                if (fileExists) {
                     resolve();
-                    return;
+                } else {
+                    reject(new Error(`No such file: ${soundPath}`));
                 }
-
-                message.member.voiceChannel.join().then(connection => {
-                    const dispatcher = connection.playFile(soundPath);
-                    dispatcher.on('end', reason => {
-                        message.member.voiceChannel.leave();
-                        --currentSoundCount;
-                        resolve();
-                    });
-                }).catch(caught => {
-                    logger.warn(`Could not play sound: ${caught}`);
-                    message.member.voiceChannel.leave();
-                    handleInvalidFile(message.channel, argument);
-                    --currentSoundCount;
-                    resolve();
-                });
+            }, caught => {
+                reject(caught);
             });
-        }));
+        })).then(() => {
+            return message.member.voiceChannel.join();
+        }).then(connection => new Promise((resolve, reject) => {
+            const dispatcher = connection.playFile(soundPath);
+
+            dispatcher.on('end', reason => {
+                resolve();
+            });
+
+            dispatcher.on('error', caught => {
+                handleInvalidFile(message.channel, argument);
+                reject(caught);
+            });
+        })).catch(caught => {
+            if (caught instanceof Error) {
+                logger.info(`Could not play sound: ${caught.stack}`);
+            } else {
+                logger.info(`Could not play sound: ${caught}`);
+            }
+        }).finally(() => {
+            --currentSoundCount;
+            message.member.voiceChannel.leave();
+        });
     }
 };
 
-function handleInvalidFile(channel, filename) {
+function handleInvalidFile(channel, argument) {
     channel.send(`No sound named ${filename}! Perhaps that moron, <@${config.authorDiscordId}>, didn't add it...`);
 }
