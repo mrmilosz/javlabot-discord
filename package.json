@@ -17,7 +17,8 @@
         "libsodium-wrappers": "^0.7.3",
         "node-opus": "^0.3.0",
         "uws": "^10.148.0",
-        "winston": "^2.4.2"
+        "winston": "^2.4.2",
+        "ytdl-core": "^0.20.4"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
