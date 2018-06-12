@@ -1,6 +1,6 @@
 const config = require('../../config');
-const locked = require('./decorators/locked');
-const notbot = require('./decorators/notbot');
+const locked = require('./decorator/locked');
+const notbot = require('./decorator/notbot');
 
 module.exports = {
     @locked
